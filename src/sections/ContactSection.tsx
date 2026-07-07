@@ -1,0 +1,222 @@
+import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function ContactSection() {
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [isOpeningMail, setIsOpeningMail] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const headerTitle = el.querySelector('.contact-title');
+    const headerSubtitle = el.querySelector('.contact-subtitle');
+    const leftItems = el.querySelectorAll('.contact-left-item');
+    const rightItems = el.querySelectorAll('.contact-right-item');
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        [headerTitle, headerSubtitle],
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          stagger: 0.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el.querySelector('.contact-header'),
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        leftItems,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          stagger: 0.15,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el.querySelector('.contact-body'),
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        rightItems,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          stagger: 0.18,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el.querySelector('.contact-body'),
+            start: 'top 80%',
+            toggleActions: 'play none none none',
+          },
+        }
+      );
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(`Contact from ${form.name}`);
+    const body = encodeURIComponent(form.message);
+    window.location.href = `mailto:info@bigwave.com?subject=${subject}&body=${body}`;
+    setIsOpeningMail(true);
+    setTimeout(() => setIsOpeningMail(false), 4000);
+  };
+
+  return (
+    <section
+      id="contact"
+      ref={sectionRef}
+      className="min-h-screen flex flex-col justify-center items-center py-24 px-4 sm:px-6 bg-[#060B18] relative overflow-hidden"
+    >
+      <div className="w-full max-w-4xl mx-auto">
+
+        {/* Header */}
+        <div className="text-center mb-20 contact-header">
+          <h2 className="font-display text-[38px] sm:text-[52px] md:text-[64px] tracking-[0.35em] uppercase text-[#B89B63] font-light mb-6 leading-none contact-title">
+            GET IN TOUCH
+          </h2>
+          <p className="text-[#D2D2D5]/50 text-xs md:text-sm tracking-[0.12em] font-light font-body contact-subtitle">
+            Reach out to explore partnership opportunities
+          </p>
+        </div>
+
+        {/* Two-column body */}
+        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-y-14 gap-x-12 lg:gap-x-16 items-start contact-body">
+
+          {/* LEFT — Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+
+            {/* Name */}
+            <div className="flex flex-col gap-3 contact-left-item">
+              <label className="text-[10px] tracking-[0.28em] uppercase text-[#9ca3af] font-medium font-body">
+                NAME
+              </label>
+              <input
+                type="text"
+                required
+                maxLength={100}
+                value={form.name}
+                onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))}
+                className="w-full h-[52px] bg-transparent border border-[rgba(255,255,255,0.12)] px-5 text-[#D2D2D5] placeholder:text-[#4a4b55] focus:outline-none focus:border-[rgba(184,155,99,0.6)] transition-all duration-300 rounded-none tracking-wide text-sm font-light font-body"
+                placeholder="Your name"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col gap-3 contact-left-item">
+              <label className="text-[10px] tracking-[0.28em] uppercase text-[#9ca3af] font-medium font-body">
+                EMAIL
+              </label>
+              <input
+                type="email"
+                required
+                maxLength={255}
+                value={form.email}
+                onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
+                className="w-full h-[52px] bg-transparent border border-[rgba(255,255,255,0.12)] px-5 text-[#D2D2D5] placeholder:text-[#4a4b55] focus:outline-none focus:border-[rgba(184,155,99,0.6)] transition-all duration-300 rounded-none tracking-wide text-sm font-light font-body"
+                placeholder="your@email.com"
+              />
+            </div>
+
+            {/* Message */}
+            <div className="flex flex-col gap-3 contact-left-item">
+              <label className="text-[10px] tracking-[0.28em] uppercase text-[#9ca3af] font-medium font-body">
+                MESSAGE
+              </label>
+              <textarea
+                required
+                maxLength={1000}
+                value={form.message}
+                onChange={(e) => setForm((s) => ({ ...s, message: e.target.value }))}
+                className="w-full h-[160px] bg-transparent border border-[rgba(255,255,255,0.12)] px-5 py-4 text-[#D2D2D5] placeholder:text-[#4a4b55] focus:outline-none focus:border-[rgba(184,155,99,0.6)] transition-all duration-300 rounded-none resize-none tracking-wide text-sm font-light font-body"
+                placeholder="How can we help?"
+              />
+            </div>
+
+            {/* Button */}
+            <div className="contact-left-item">
+              <button
+                type="submit"
+                className="h-[52px] px-10 font-body text-[11px] tracking-[0.28em] uppercase border border-[rgba(184,155,99,0.55)] text-[#B89B63] bg-transparent hover:bg-[#B89B63] hover:text-[#060B18] transition-all duration-500 active:scale-[0.98] rounded-none"
+              >
+                {isOpeningMail ? 'Opening mail client…' : 'SEND MESSAGE'}
+              </button>
+            </div>
+          </form>
+
+          {/* RIGHT — Contact Info */}
+          <div className="flex flex-col gap-10 pt-1 md:pt-0">
+
+            {/* Decorative circle — top right */}
+            <div className="hidden md:flex justify-end contact-right-item">
+              <div className="w-5 h-5 rounded-full border border-[#B89B63]/30 flex items-center justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#B89B63]" />
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col gap-2 contact-right-item">
+              <h3 className="text-[10px] tracking-[0.28em] uppercase text-[#B89B63] font-medium font-body">
+                EMAIL
+              </h3>
+              <a
+                href="mailto:info@bigwave.com"
+                className="text-[#D2D2D5]/80 text-sm hover:text-[#B89B63] transition-colors duration-300 tracking-wide font-light font-body"
+              >
+                info@bigwave.com
+              </a>
+            </div>
+
+            {/* Headquarters */}
+            <div className="flex flex-col gap-2 contact-right-item">
+              <h3 className="text-[10px] tracking-[0.28em] uppercase text-[#B89B63] font-medium font-body">
+                HEADQUARTERS
+              </h3>
+              <p className="text-[#D2D2D5]/80 text-sm leading-relaxed tracking-wide font-light font-body">
+                Big Wave Holding Company
+                <br />
+                International Business District
+                <br />
+                Riyadh, Saudi Arabia
+              </p>
+            </div>
+
+            {/* Phone */}
+            <div className="flex flex-col gap-2 contact-right-item">
+              <h3 className="text-[10px] tracking-[0.28em] uppercase text-[#B89B63] font-medium font-body">
+                PHONE
+              </h3>
+              <a
+                href="tel:+966000000000"
+                className="text-[#D2D2D5]/80 text-sm hover:text-[#B89B63] transition-colors duration-300 tracking-wide font-light font-body"
+              >
+                +966 (0) 00 000 0000
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
