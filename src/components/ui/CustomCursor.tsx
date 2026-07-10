@@ -185,8 +185,8 @@ export default function CustomCursor() {
     };
   }, [checkInteractiveHover, handleMouseLeaveInteractive]);
 
-  // Disable custom cursor on mobile touch screens
-  if (typeof window !== 'undefined' && 'ontouchstart' in window) {
+  // Disable custom cursor on mobile touch screens (coarse pointer devices)
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
     return null;
   }
 

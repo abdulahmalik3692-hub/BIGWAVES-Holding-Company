@@ -118,7 +118,8 @@ export default function ContactSection() {
                 maxLength={100}
                 value={form.name}
                 onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))}
-                className="w-full h-[52px] bg-transparent border border-[rgba(255,255,255,0.12)] px-5 text-[#D2D2D5] placeholder:text-[#4a4b55] focus:outline-none focus:border-[rgba(184,155,99,0.6)] transition-all duration-300 rounded-none tracking-wide text-sm font-light font-body"
+                style={{ paddingLeft: '20px' }}
+                className="w-full h-[52px] bg-transparent border border-[rgba(255,255,255,0.12)] pr-5 text-[#D2D2D5] placeholder:text-[rgba(255,255,255,0.2)] placeholder:tracking-normal placeholder:font-light placeholder:text-[15px] focus:outline-none focus:border-[rgba(184,155,99,0.5)] transition-all duration-300 text-sm font-light font-body"
                 placeholder="Your name"
               />
             </div>
@@ -134,7 +135,8 @@ export default function ContactSection() {
                 maxLength={255}
                 value={form.email}
                 onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
-                className="w-full h-[52px] bg-transparent border border-[rgba(255,255,255,0.12)] px-5 text-[#D2D2D5] placeholder:text-[#4a4b55] focus:outline-none focus:border-[rgba(184,155,99,0.6)] transition-all duration-300 rounded-none tracking-wide text-sm font-light font-body"
+                style={{ paddingLeft: '20px' }}
+                className="w-full h-[52px] bg-transparent border border-[rgba(255,255,255,0.12)] pr-5 text-[#D2D2D5] placeholder:text-[rgba(255,255,255,0.2)] placeholder:tracking-normal placeholder:font-light placeholder:text-[15px] focus:outline-none focus:border-[rgba(184,155,99,0.5)] transition-all duration-300 text-sm font-light font-body"
                 placeholder="your@email.com"
               />
             </div>
@@ -149,7 +151,8 @@ export default function ContactSection() {
                 maxLength={1000}
                 value={form.message}
                 onChange={(e) => setForm((s) => ({ ...s, message: e.target.value }))}
-                className="w-full h-[160px] bg-transparent border border-[rgba(255,255,255,0.12)] px-5 py-4 text-[#D2D2D5] placeholder:text-[#4a4b55] focus:outline-none focus:border-[rgba(184,155,99,0.6)] transition-all duration-300 rounded-none resize-none tracking-wide text-sm font-light font-body"
+                style={{ paddingLeft: '20px' }}
+                className="w-full h-[160px] bg-transparent border border-[rgba(255,255,255,0.12)] pr-5 py-4 text-[#D2D2D5] placeholder:text-[rgba(255,255,255,0.2)] placeholder:tracking-normal placeholder:font-light placeholder:text-[15px] focus:outline-none focus:border-[rgba(184,155,99,0.5)] transition-all duration-300 resize-none text-sm font-light font-body"
                 placeholder="How can we help?"
               />
             </div>
@@ -158,7 +161,8 @@ export default function ContactSection() {
             <div className="contact-left-item">
               <button
                 type="submit"
-                className="h-[52px] px-10 font-body text-[11px] tracking-[0.28em] uppercase border border-[rgba(184,155,99,0.55)] text-[#B89B63] bg-transparent hover:bg-[#B89B63] hover:text-[#060B18] transition-all duration-500 active:scale-[0.98] rounded-none"
+                style={{ border: '1px solid rgba(184,155,99,0.5)' }}
+                className="h-[52px] w-[240px] font-body text-[11px] tracking-[0.3em] uppercase text-[#B89B63] bg-transparent hover:bg-[rgba(184,155,99,0.07)] hover:text-[#d4b96a] hover:shadow-[0_0_20px_rgba(184,155,99,0.12)] transition-all duration-500 active:scale-[0.98]"
               >
                 {isOpeningMail ? 'Opening mail client…' : 'SEND MESSAGE'}
               </button>

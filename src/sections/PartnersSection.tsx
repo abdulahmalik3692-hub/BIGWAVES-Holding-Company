@@ -49,7 +49,7 @@ export default function PartnersSection() {
       {/* Cards Container */}
       <div
         ref={cardsContainerRef}
-        className="relative z-10 flex flex-col items-center w-full px-4 sm:px-6 gap-8 pb-20"
+        className="relative z-10 flex flex-col items-center w-full px-4 sm:px-8 lg:px-12 gap-12 pb-24"
       >
         {partners.map((partner) => (
           <PartnerCard key={partner.name} partner={partner} />

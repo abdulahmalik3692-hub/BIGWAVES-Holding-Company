@@ -96,6 +96,9 @@ export default function AboutSection() {
         alt=""
         aria-hidden="true"
         className="hidden xl:block absolute"
+        loading="lazy"
+        width={1200}
+        height={600}
         style={{
           bottom: '13%',
           left: '0%',
@@ -136,6 +139,9 @@ export default function AboutSection() {
           alt=""
           aria-hidden="true"
           className="w-[110%] opacity-90 pointer-events-none select-none mt-[-40px]"
+          loading="lazy"
+          width={360}
+          height={270}
           style={{ position: 'relative', zIndex: 1 }}
         />
         <p
@@ -181,6 +187,9 @@ export default function AboutSection() {
           alt=""
           aria-hidden="true"
           className="w-[90%] max-w-[500px] opacity-90 pointer-events-none select-none mt-[-30px]"
+          loading="lazy"
+          width={500}
+          height={380}
           style={{ position: 'relative', zIndex: 1 }}
         />
         <p

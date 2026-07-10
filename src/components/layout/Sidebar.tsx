@@ -158,7 +158,9 @@ export default function Sidebar() {
           >
             <div className="site-sidebar__item-marker" />
 
-            <PartnerLogoBox partner={partner} size="lg" />
+            <span className="site-sidebar__initial">
+              {partner.name.charAt(0)}
+            </span>
 
             <span className="site-sidebar__partner-name">
               {partner.name}

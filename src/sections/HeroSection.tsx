@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrollIndicator from '../components/ui/ScrollIndicator';
-import GoldDivider from '../components/ui/GoldDivider';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -52,18 +51,83 @@ export default function HeroSection() {
     }
 
     const video = videoRef.current;
-    const handleVideoLoaded = () => {
-      ScrollTrigger.refresh();
+    let retryInterval: ReturnType<typeof setInterval> | null = null;
+    let interactionHandler: (() => void) | null = null;
+
+    const cleanupAll = () => {
+      if (retryInterval) {
+        clearInterval(retryInterval);
+        retryInterval = null;
+      }
+      if (interactionHandler) {
+        document.removeEventListener('click', interactionHandler);
+        document.removeEventListener('scroll', interactionHandler);
+        document.removeEventListener('touchstart', interactionHandler);
+        document.removeEventListener('keydown', interactionHandler);
+        document.removeEventListener('mousemove', interactionHandler);
+        interactionHandler = null;
+      }
+    };
+
+    const forcePlay = () => {
+      if (!video) return;
+      // Ensure these are always set programmatically
+      video.muted = true;
+      video.playsInline = true;
+      video.loop = true;
+
+      // If already playing, we're done
+      if (!video.paused && !video.ended) {
+        cleanupAll();
+        ScrollTrigger.refresh();
+        return;
+      }
+
+      video.play()
+        .then(() => {
+          // Success — stop all retry mechanisms
+          cleanupAll();
+          ScrollTrigger.refresh();
+        })
+        .catch(() => {
+          // Will be retried by interval or interaction listener
+        });
     };
 
     if (video) {
-      video.addEventListener('loadedmetadata', handleVideoLoaded);
+      // Attempt 1: Play immediately
+      forcePlay();
+
+      // Attempt 2: Retry every 500ms until playing
+      retryInterval = setInterval(() => {
+        if (video && (!video.paused && !video.ended)) {
+          cleanupAll();
+          return;
+        }
+        forcePlay();
+      }, 500);
+
+      // Attempt 3: Play on any user interaction (covers strict autoplay policies)
+      interactionHandler = () => {
+        forcePlay();
+      };
+      document.addEventListener('click', interactionHandler, { once: true });
+      document.addEventListener('scroll', interactionHandler, { once: true });
+      document.addEventListener('touchstart', interactionHandler, { once: true });
+      document.addEventListener('keydown', interactionHandler, { once: true });
+      document.addEventListener('mousemove', interactionHandler, { once: true });
+
+      // Attempt 4: Also try when video data is ready
+      video.addEventListener('loadeddata', forcePlay, { once: true });
+      video.addEventListener('canplay', forcePlay, { once: true });
     }
 
     return () => {
       triggers.forEach((trigger) => trigger.kill());
+      cleanupAll();
       if (video) {
-        video.removeEventListener('loadedmetadata', handleVideoLoaded);
+        video.removeEventListener('loadeddata', forcePlay);
+        video.removeEventListener('canplay', forcePlay);
       }
     };
   }, []);
@@ -102,10 +166,13 @@ export default function HeroSection() {
             muted
             loop
             playsInline
+            preload="auto"
+            width="1920"
+            height="1080"
             className="absolute inset-0 h-full w-full object-cover brightness-[0.78] saturate-[0.88]"
           >
             <source
-              src="https://big-wave-landing.vercel.app/videos/bigwave_hero.mp4"
+              src="/videos/bigwave_hero.mp4"
               type="video/mp4"
             />
           </video>
@@ -126,57 +193,65 @@ export default function HeroSection() {
         the true viewport center, not just the content area center.
       */}
       <div
-        ref={contentRef}
-        className="relative z-10 max-w-3xl w-full px-6 pt-36 text-center will-change-[transform,opacity] md:pt-0 md:-translate-x-[110px]"
+        className="relative z-10 max-w-3xl w-full px-6 pt-36 text-center md:pt-0"
       >
-        <h2
-          className="animate-fade-up font-display text-[#F1ECE6] tracking-[0.2em] uppercase font-light leading-[1.05]"
-          style={{ fontSize: 'clamp(2.625rem, 8vw, 6rem)' }}
+        <div
+          ref={contentRef}
+          className="w-full will-change-[transform,opacity]"
         >
-          BIG WAVE
-        </h2>
-
-        <p
-          className="animate-fade-up animate-fade-up-delay-1 font-body text-[#B89B63] text-[0.6rem] tracking-[0.35em] uppercase mt-5"
-        >
-          HOLDING COMPANY
-        </p>
-
-        <div className="animate-fade-up animate-fade-up-delay-2 my-7">
-          <GoldDivider width={48} opacity={0.55} />
-        </div>
-
-        <div className="animate-fade-up animate-fade-up-delay-3">
-          <a
-            href="#about"
-            onClick={handleDiscoverClick}
-            data-cursor="interactive"
-            className="inline-block font-body text-[0.6rem] font-normal tracking-[0.3em] uppercase transition-all duration-300"
-            style={{
-              padding: '14px 32px',
-              border: '1px solid rgba(184, 155, 99, 0.5)',
-              color: '#E6DCC5',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#B89B63';
-              (e.currentTarget as HTMLAnchorElement).style.color = '#060B18';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'transparent';
-              (e.currentTarget as HTMLAnchorElement).style.color = '#E6DCC5';
-            }}
+          <h2
+            className="animate-fade-up font-display text-[#F1ECE6] tracking-[0.2em] uppercase font-light leading-[1.05]"
+            style={{ fontSize: 'clamp(2.625rem, 8vw, 6rem)' }}
           >
-            DISCOVER
-          </a>
+            BIG WAVE
+          </h2>
+
+          <p
+            className="animate-fade-up animate-fade-up-delay-1 font-body text-[#B89B63] text-[0.6rem] tracking-[0.35em] uppercase mt-5"
+          >
+            HOLDING COMPANY
+          </p>
+
+          <div style={{ marginTop: '2.5rem', marginBottom: '3rem' }}>
+            <div
+              style={{
+                width: '48px',
+                height: '2px',
+                margin: '0 auto',
+                background: 'hsl(38 40% 61% / 0.7)',
+              }}
+            />
+          </div>
+
+          <div className="animate-fade-up animate-fade-up-delay-3">
+            <a
+              href="#about"
+              onClick={handleDiscoverClick}
+              data-cursor="interactive"
+              className="inline-block font-body text-[0.6rem] font-normal tracking-[0.3em] uppercase transition-all duration-300"
+              style={{
+                padding: '14px 32px',
+                border: '1px solid rgba(184, 155, 99, 0.5)',
+                color: '#E6DCC5',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#B89B63';
+                (e.currentTarget as HTMLAnchorElement).style.color = '#060B18';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'transparent';
+                (e.currentTarget as HTMLAnchorElement).style.color = '#E6DCC5';
+              }}
+            >
+              DISCOVER
+            </a>
+          </div>
         </div>
       </div>
 
-      {/* ── Scroll Indicator (centered in full viewport) ── */}
+      {/* ── Scroll Indicator ── */}
       <div className="absolute bottom-10 left-0 right-0 flex justify-center z-10 pointer-events-none">
-        {/* Shift left by half sidebar width so indicator is at true viewport center */}
-        <div className="md:-translate-x-[110px]">
-          <ScrollIndicator />
-        </div>
+        <ScrollIndicator />
       </div>
     </section>
   );
