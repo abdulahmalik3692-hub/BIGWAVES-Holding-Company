@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import CustomCursor from './components/ui/CustomCursor';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import HeroSection from './sections/HeroSection';
-import AboutSection from './sections/AboutSection';
-import PartnersSection from './sections/PartnersSection';
-import ContactSection from './sections/ContactSection';
-import Footer from './components/layout/Footer';
 import Loader from './components/ui/Loader';
+
+const AboutSection = lazy(() => import('./sections/AboutSection'));
+const PartnersSection = lazy(() => import('./sections/PartnersSection'));
+const ContactSection = lazy(() => import('./sections/ContactSection'));
+const Footer = lazy(() => import('./components/layout/Footer'));
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -50,25 +51,33 @@ export default function App() {
           <div className="h-24 bg-gradient-to-b from-background to-navy" />
 
           {/* About Section */}
-          <AboutSection />
+          <Suspense fallback={<div className="min-h-[50vh] bg-navy" />}>
+            <AboutSection />
+          </Suspense>
 
           {/* Section Divider */}
           <div className="h-24 bg-gradient-to-b from-navy to-background/40" />
 
           {/* Partners Section */}
-          <PartnersSection />
+          <Suspense fallback={<div className="min-h-[50vh] bg-background" />}>
+            <PartnersSection />
+          </Suspense>
 
           {/* Section Divider */}
           <div className="h-24 bg-background" />
 
           {/* Contact Section */}
-          <ContactSection />
+          <Suspense fallback={<div className="min-h-[50vh] bg-[#060B18]" />}>
+            <ContactSection />
+          </Suspense>
 
           {/* Section Divider */}
           <div className="h-16 bg-gradient-to-b from-secondary/30 to-navy-deep" />
 
           {/* Footer */}
-          <Footer />
+          <Suspense fallback={<div className="h-24 bg-navy-deep" />}>
+            <Footer />
+          </Suspense>
         </main>
       </div>
     </div>

@@ -55,7 +55,7 @@ export default function PartnerCard({ partner }: PartnerCardProps) {
           <span className="partner-card__origin">
             {partner.flagCode ? (
               <img
-                src={`https://flagcdn.com/w20/${partner.flagCode}.png`}
+                src={`/images/flags/${partner.flagCode}.png`}
                 alt={partner.origin}
                 className="partner-card__flag"
                 loading="lazy"

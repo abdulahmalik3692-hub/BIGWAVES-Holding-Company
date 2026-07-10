@@ -36,11 +36,27 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const scrolledPartners = [...partners, ...partners, ...partners];
 
   const scrollStep = useCallback(() => {
     const container = scrollContainerRef.current;
-    if (!container || isHovered) {
+    const isDesktop = window.innerWidth >= 768;
+    const isTabHidden = document.hidden;
+    const isHeaderHidden = shrinkRatio >= 1;
+
+    if (!container || isHovered || isDesktop || isTabHidden || isHeaderHidden) {
       animationFrameRef.current = requestAnimationFrame(scrollStep);
       return;
     }
@@ -54,11 +70,20 @@ export default function Header() {
     
     container.scrollLeft = scrollPosRef.current;
     animationFrameRef.current = requestAnimationFrame(scrollStep);
-  }, [isHovered]);
+  }, [isHovered, shrinkRatio]);
 
   useEffect(() => {
     animationFrameRef.current = requestAnimationFrame(scrollStep);
-    return () => cancelAnimationFrame(animationFrameRef.current);
+    
+    const handleVisibilityChange = () => {};
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('resize', handleVisibilityChange);
+
+    return () => {
+      cancelAnimationFrame(animationFrameRef.current);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('resize', handleVisibilityChange);
+    };
   }, [scrollStep]);
 
   const handleContainerScroll = () => {
@@ -85,24 +110,26 @@ export default function Header() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-navy/80 via-navy/60 to-navy/20 backdrop-blur-md">
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-navy/90 via-navy/80 to-navy/30 backdrop-blur-md">
         <div className="flex items-center justify-between px-4 h-14 border-b border-border/10">
           <h1 className="font-display text-gold text-sm tracking-[0.3em] uppercase font-semibold">
             Big Wave
           </h1>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-gold w-8 h-8 flex items-center justify-center transition-transform duration-300 active:scale-95 text-xl"
+            className="w-8 h-8 flex flex-col justify-center items-center gap-1.5 focus:outline-none transition-all duration-300 active:scale-90"
             aria-label="Toggle menu"
           >
-            {isOpen ? '✕' : '☰'}
+            <span className={`w-5 h-0.5 bg-gold transition-all duration-300 origin-center ${isOpen ? 'rotate-45 translate-y-[5px]' : ''}`} />
+            <span className={`w-5 h-0.5 bg-gold transition-all duration-300 ${isOpen ? 'opacity-0 scale-x-0' : ''}`} />
+            <span className={`w-5 h-0.5 bg-gold transition-all duration-300 origin-center ${isOpen ? '-rotate-45 -translate-y-[5px]' : ''}`} />
           </button>
         </div>
 
         {/* Horizontal Autoscrolling Bar of Partners */}
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto bg-navy/20 backdrop-blur-sm transition-all duration-300"
+          className="flex overflow-x-auto bg-navy/30 backdrop-blur-sm transition-all duration-300 border-b border-border/5"
           style={{
             height: `${HEADER_HEIGHT * (1 - shrinkRatio)}px`,
             opacity: 1 - shrinkRatio,
@@ -121,11 +148,11 @@ export default function Header() {
               href={partner.url}
               target={partner.url !== '#' ? '_blank' : undefined}
               rel="noopener noreferrer"
-              className="group flex-shrink-0 flex flex-col items-center justify-center gap-1.5 bg-transparent transition-colors duration-300 hover:bg-secondary/25"
+              className="group flex-shrink-0 flex flex-col items-center justify-center gap-1 bg-transparent transition-colors duration-300 hover:bg-secondary/25"
               style={{ width: `${ITEM_WIDTH}px` }}
             >
               <PartnerLogoBox partner={partner} size="md" />
-              <span className="font-body text-foreground/80 text-[9px] tracking-[0.1em] uppercase whitespace-nowrap group-hover:text-gold transition-colors duration-300">
+              <span className="font-body text-foreground/80 text-[8px] tracking-[0.1em] uppercase whitespace-nowrap group-hover:text-gold transition-colors duration-300">
                 {partner.name}
               </span>
             </a>
@@ -135,7 +162,7 @@ export default function Header() {
 
       {/* Full screen mobile menu overlay */}
       <div
-        className={`md:hidden fixed inset-0 z-40 bg-background/60 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 transition-all duration-500 ${
+        className={`md:hidden fixed inset-0 z-40 bg-background/95 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 transition-all duration-500 ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
@@ -144,7 +171,7 @@ export default function Header() {
             key={item}
             href={`#${item.toLowerCase()}`}
             onClick={(e) => handleNavClick(e, `#${item.toLowerCase()}`)}
-            className="font-display text-foreground text-2xl tracking-[0.2em] uppercase transition-colors duration-300 hover:text-gold"
+            className="font-display text-foreground text-3xl tracking-[0.25em] uppercase transition-colors duration-300 hover:text-gold"
           >
             {item}
           </a>

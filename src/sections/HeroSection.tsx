@@ -166,14 +166,26 @@ export default function HeroSection() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
+            poster="/images/hero_poster.webp"
             width="1920"
             height="1080"
             className="absolute inset-0 h-full w-full object-cover brightness-[0.78] saturate-[0.88]"
           >
             <source
+              src="/videos/bigwave_hero.webm"
+              type="video/webm"
+            />
+            <source
               src="/videos/bigwave_hero.mp4"
               type="video/mp4"
+            />
+            <track
+              kind="captions"
+              src="/videos/empty.vtt"
+              srcLang="en"
+              label="English"
+              default
             />
           </video>
 
@@ -193,7 +205,7 @@ export default function HeroSection() {
         the true viewport center, not just the content area center.
       */}
       <div
-        className="relative z-10 max-w-3xl w-full px-6 pt-36 text-center md:pt-0"
+        className="relative z-10 max-w-3xl w-full px-6 pt-24 pb-12 text-center md:py-0"
       >
         <div
           ref={contentRef}
@@ -201,18 +213,18 @@ export default function HeroSection() {
         >
           <h2
             className="animate-fade-up font-display text-[#F1ECE6] tracking-[0.2em] uppercase font-light leading-[1.05]"
-            style={{ fontSize: 'clamp(2.625rem, 8vw, 6rem)' }}
+            style={{ fontSize: 'clamp(2.5rem, 7.5vw, 6rem)' }}
           >
             BIG WAVE
           </h2>
 
           <p
-            className="animate-fade-up animate-fade-up-delay-1 font-body text-[#B89B63] text-[0.6rem] tracking-[0.35em] uppercase mt-5"
+            className="animate-fade-up animate-fade-up-delay-1 font-body text-[#B89B63] text-[clamp(0.55rem,1.5vw,0.75rem)] tracking-[0.35em] uppercase mt-4 md:mt-5"
           >
             HOLDING COMPANY
           </p>
 
-          <div style={{ marginTop: '2.5rem', marginBottom: '3rem' }}>
+          <div className="my-6 md:my-10">
             <div
               style={{
                 width: '48px',
@@ -228,9 +240,9 @@ export default function HeroSection() {
               href="#about"
               onClick={handleDiscoverClick}
               data-cursor="interactive"
-              className="inline-block font-body text-[0.6rem] font-normal tracking-[0.3em] uppercase transition-all duration-300"
+              className="inline-block font-body text-[clamp(0.55rem,1.2vw,0.65rem)] font-normal tracking-[0.3em] uppercase transition-all duration-300"
               style={{
-                padding: '14px 32px',
+                padding: '12px 28px',
                 border: '1px solid rgba(184, 155, 99, 0.5)',
                 color: '#E6DCC5',
               }}

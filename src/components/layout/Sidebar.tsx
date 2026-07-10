@@ -86,7 +86,10 @@ export default function Sidebar() {
 
   const scrollStep = useCallback(() => {
     const container = scrollContainerRef.current;
-    if (!container || isHovered) {
+    const isMobile = window.innerWidth < 768;
+    const isTabHidden = document.hidden;
+
+    if (!container || isHovered || isMobile || isTabHidden) {
       animationFrameRef.current = requestAnimationFrame(scrollStep);
       return;
     }
@@ -104,7 +107,16 @@ export default function Sidebar() {
 
   useEffect(() => {
     animationFrameRef.current = requestAnimationFrame(scrollStep);
-    return () => cancelAnimationFrame(animationFrameRef.current);
+    
+    const handleVisibilityChange = () => {};
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('resize', handleVisibilityChange);
+
+    return () => {
+      cancelAnimationFrame(animationFrameRef.current);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('resize', handleVisibilityChange);
+    };
   }, [scrollStep]);
 
   const handleInnerScroll = () => {

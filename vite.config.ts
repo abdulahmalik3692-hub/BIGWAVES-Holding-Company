@@ -5,4 +5,37 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('scheduler')) {
+              return 'react-vendor';
+            }
+            if (id.includes('gsap')) {
+              return 'gsap-vendor';
+            }
+            return 'vendor';
+          }
+        }
+      }
+    }
+  },
+  server: {
+    headers: {
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    }
+  },
+  preview: {
+    headers: {
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    }
+  }
 })

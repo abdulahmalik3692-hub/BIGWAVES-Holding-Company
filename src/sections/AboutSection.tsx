@@ -86,41 +86,19 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      className="bg-navy relative overflow-hidden"
-      style={{ height: '100vh' }}
+      className="bg-navy relative overflow-hidden py-20 md:py-28 xl:py-0 xl:h-screen"
     >
-      {/* Background Yacht Image for Desktop */}
-      <img
-        ref={desktopImageRef}
-        src="https://big-wave-landing.vercel.app/images/yacht-2.png"
-        alt=""
-        aria-hidden="true"
-        className="hidden xl:block absolute"
-        loading="lazy"
-        width={1200}
-        height={600}
-        style={{
-          bottom: '13%',
-          left: '0%',
-          width: '80%',
-          opacity: 0.9,
-          pointerEvents: 'none',
-          zIndex: 0,
-          userSelect: 'none',
-        }}
-      />
-
       {/* 1. Mobile Layout */}
       <div
-        className="md:hidden h-full flex flex-col items-center justify-center px-6 gap-6"
+        className="md:hidden w-full flex flex-col items-center justify-center px-6 gap-8"
         style={{ position: 'relative', zIndex: 1 }}
       >
         <h3
           ref={mobileTitleRef}
           className="font-display text-foreground tracking-[0.14em] uppercase font-extralight text-center w-full"
           style={{
-            fontSize: 'clamp(2.2rem, 9vw, 3.5rem)',
-            lineHeight: 1.05,
+            fontSize: 'clamp(2rem, 8vw, 3rem)',
+            lineHeight: 1.1,
             position: 'relative',
             zIndex: 2,
           }}
@@ -135,10 +113,10 @@ export default function AboutSection() {
         </h3>
         <img
           ref={mobileImageRef}
-          src="https://big-wave-landing.vercel.app/images/yacht-2.png"
+          src="/images/yacht-2.webp"
           alt=""
           aria-hidden="true"
-          className="w-[110%] opacity-90 pointer-events-none select-none mt-[-40px]"
+          className="w-full max-w-[340px] opacity-90 pointer-events-none select-none"
           loading="lazy"
           width={360}
           height={270}
@@ -148,8 +126,8 @@ export default function AboutSection() {
           ref={mobileTextRef}
           className="font-body text-foreground/70 text-center"
           style={{
-            fontSize: '0.95rem',
-            lineHeight: 1.8,
+            fontSize: 'clamp(0.85rem, 2vw, 0.95rem)',
+            lineHeight: 1.7,
             letterSpacing: '0.04em',
             maxWidth: '90%',
           }}
@@ -160,15 +138,15 @@ export default function AboutSection() {
 
       {/* 2. Tablet Layout */}
       <div
-        className="hidden md:flex xl:hidden h-full flex-col items-center justify-center px-10 gap-8"
+        className="hidden md:flex xl:hidden w-full flex-col items-center justify-center px-10 gap-8"
         style={{ position: 'relative', zIndex: 1 }}
       >
         <h3
           ref={tabletTitleRef}
           className="font-display text-foreground tracking-[0.14em] uppercase font-extralight text-center w-full"
           style={{
-            fontSize: 'clamp(2.8rem, 7vw, 4.5rem)',
-            lineHeight: 1.05,
+            fontSize: 'clamp(2.8rem, 6vw, 4rem)',
+            lineHeight: 1.1,
             position: 'relative',
             zIndex: 2,
           }}
@@ -183,10 +161,10 @@ export default function AboutSection() {
         </h3>
         <img
           ref={tabletImageRef}
-          src="https://big-wave-landing.vercel.app/images/yacht-2.png"
+          src="/images/yacht-2.webp"
           alt=""
           aria-hidden="true"
-          className="w-[90%] max-w-[500px] opacity-90 pointer-events-none select-none mt-[-30px]"
+          className="w-[85%] max-w-[460px] opacity-90 pointer-events-none select-none"
           loading="lazy"
           width={500}
           height={380}
@@ -196,10 +174,10 @@ export default function AboutSection() {
           ref={tabletTextRef}
           className="font-body text-foreground/70 text-center"
           style={{
-            fontSize: '1.1rem',
+            fontSize: 'clamp(0.95rem, 2.2vw, 1.1rem)',
             lineHeight: 1.8,
             letterSpacing: '0.04em',
-            maxWidth: '80%',
+            maxWidth: '75%',
           }}
         >
           {textContent}
@@ -208,6 +186,25 @@ export default function AboutSection() {
 
       {/* 3. Desktop Layout */}
       <div className="hidden xl:block h-full relative" style={{ zIndex: 1 }}>
+        {/* Background Yacht Image for Desktop — Moved inside desktop-only container */}
+        <img
+          ref={desktopImageRef}
+          src="/images/yacht-2.webp"
+          alt=""
+          aria-hidden="true"
+          className="absolute pointer-events-none select-none"
+          loading="lazy"
+          width={1200}
+          height={600}
+          style={{
+            bottom: '13%',
+            left: '0%',
+            width: '80%',
+            opacity: 0.9,
+            zIndex: 0,
+          }}
+        />
+
         <h3
           ref={desktopTitleRef}
           className="font-display text-foreground tracking-[0.14em] uppercase font-extralight absolute"

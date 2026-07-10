@@ -187,7 +187,7 @@
 }
 
 .site-footer__domain {
-  color: rgb(100 116 159 / 0.4);
+  color: rgb(100 116 159 / 0.85);
   display: inline-block;
   font-family: var(--font-body);
   font-size: 10px;
@@ -219,6 +219,21 @@
 
   .site-sidebar::before {
     background: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-footer__copyright {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: center;
+  }
+  .site-footer__separator {
+    display: none;
+  }
+  .site-footer__domain {
+    margin-top: 0.75rem;
   }
 }
 

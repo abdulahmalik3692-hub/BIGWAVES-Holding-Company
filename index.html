@@ -17,9 +17,11 @@
     <meta name="twitter:site" content="@BigWave" />
     <meta name="twitter:image" content="/og-image.jpg" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <!-- Critical Font Preloads -->
+    <link rel="preload" href="/fonts/cormorant-garamond-latin-300.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-latin-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" as="image" href="/images/hero_poster.webp" fetchpriority="high" type="image/webp" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   </head>
   <body>
     <div id="root"></div>
